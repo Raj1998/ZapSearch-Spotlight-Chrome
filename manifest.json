@@ -9,26 +9,40 @@
       "activeTab", "declarativeContent", "storage",
       "chrome://favicon/"
     ],
-    "options_page": "",
+    "options_page": "spotlight-chrome.html",
     "content_scripts": [
-      
+      {
+        "matches": [
+          "*://*/*"
+        ],
+        "js": ["lib/content.js", "lib/options.js"],
+        "css": ["content.css"]
+      }
     ],
-    "web_accessible_resources": [""],
     "background": {
       "scripts": [
-        
+        "lib/background.js"
       ]
     },
     "commands": {
-      "toggle-feature-foo": {
+      "launch-spotlight": {
         "suggested_key": {
-          "windows": "Ctrl+Shift+E",
-          "mac": "Command+Shift+E"
+          "windows": "Ctrl+Shift+P",
+          "mac": "Command+Shift+P"
         },
-        "description": "Hot key to trigger search bar"
+        "description": "Hot-key to trigger search bar"
       }
     },
     "browser_action": {
       "default_popup": "popup.html"
-    }
+    },
+    "icons": { 
+      "16": "icons/icon_16.png",
+      "48": "icons/icon_48.png",
+     "128": "icons/icon_128.png" 
+    },
+    "web_accessible_resources": [
+      "icons/*",
+      "*.html"
+    ]
   }

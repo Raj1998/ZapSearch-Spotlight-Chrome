@@ -1,8 +1,17 @@
 {
-  "name": "Spotlight-Chrome",
+  "name": "spotlight-chrome",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/Raj1998/Spotlight-Chrome.git",
   "author": "Raj",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chrome": "^0.0.132",
+    "@types/node": "^14.14.31",
+    "typescript": "^4.1.5"
+  },
+  "scripts": {
+    "tsc-watch": "tsc --watch src/*.ts --outDir ./lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }
