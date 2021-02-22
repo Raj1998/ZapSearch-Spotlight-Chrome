@@ -1,5 +1,12 @@
 var bookmarks_map = {};
 
+/**
+ * Class for managing background actions 
+ * Unlike Content script, 
+ * this methods run in the context of 
+ * whole chrome browser, not for a single 
+ * webpage.
+ */
 class BackgroundManager {
   /**
    * Processing bookmarks in a dictionary
