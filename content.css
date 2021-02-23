@@ -1,0 +1,115 @@
+/* 
+  To cover whole page
+    For 1) background blur, 2) Dismiss the search bar
+*/
+.rpext-outter-wrap {
+  height: 100%;
+  width: 100%;
+  top: 0px;
+  /* background-color: rgba(202, 202, 202, 0.5); */
+  left: 0px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999999;
+}
+
+
+#rpext * {
+  box-sizing: border-box;
+}
+
+#rpext {
+  position: fixed;
+  box-sizing: border-box;
+  z-index: 9999999;
+  
+  box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+  
+  top: 100px;
+  left: calc(50% - 250px);
+  border-radius: 0.5em;
+
+  width: 500px;
+  font-family: Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+}
+
+#rpext.hidden {
+  display: none;
+}
+
+#rpext .rpext-inner {
+  margin: 0 auto;
+  width: 100%;
+}
+
+
+#rpext .rpext-inner input {
+  padding: 8px;
+  border-top-left-radius: 0.5em;
+  font-size: 14px;
+  border-top-right-radius: 0.5em;
+  color: black;
+  width: 100%;
+  margin: 0;
+
+}
+
+#rpext .rpext-inner input:focus {
+  border-top-left-radius: 0.4em !important;
+  border-top-right-radius: 0.4em !important;
+}
+
+#rpext .rpext-result-list {
+  border-bottom-right-radius: 0.5em;
+  background: white;
+  border-top: none;
+  border: 1px solid;
+  max-height: 500px;
+  overflow-y: auto;
+  border-bottom-left-radius: 0.5em;
+}
+
+#rpext .rpext-result-item {
+  align-items: center;
+  padding: 8px;
+  background: white;
+  color: black;
+  line-height: 1.2;
+  font-size: 14px;
+  display: flex;
+  user-select: none;
+}
+
+#rpext .rpext-result-item-title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+#rpext .rpext-result-item:hover {
+  background: #eee;
+}
+
+#rpext .rpext-result-focused {
+  background: #eee;
+}
+
+#rpext .rpext-result-item-favicon {
+  height: 20px;
+  pointer-events: none;
+  margin-right: 8px;
+  height: auto;
+  width: 20px;
+}
+
+#rpext .rpext-result-item-favicon-placeholder {
+  margin-right: 8px;
+  pointer-events: none;
+  background-color: #aaa;
+  width: 20px;
+  border-radius: 4px;
+  height: 20px;
+}
+

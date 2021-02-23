@@ -1,15 +1,22 @@
 <!DOCTYPE html>
-  <html>
-    <head>
-      <style>
-        button {
-          height: 30px;
-          width: 30px;
-          outline: none;
-        }
-      </style>
-    </head>
-    <body>
-      <h1>Hello</h1>
-    </body>
-  </html>
+<html>
+  <head>
+    <style>
+      body {
+        width: 300px;
+        height: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Spotlight for Chrome</h1>
+    <h3>Default Shortcut to launch</h3>
+    <p>Mac: "Command+Shift+P"</p>
+    <p>Windows: "Ctrl+Shift+P"</p>
+    <a href="options.html" target="_blank">Settings</a>
+    <button id="ext-shortcut">Change shortcut</button>
+    <div id="curr-shortcut"></div>
+
+    <script src="lib/options.js"></script>
+  </body>
+</html>
