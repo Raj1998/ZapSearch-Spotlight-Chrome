@@ -12,6 +12,7 @@
   },
   "scripts": {
     "tsc-watch": "tsc --watch src/*.ts --outDir ./lib",
+    "build": "rm -f build.zip && zip -r build.zip ./icons ./lib content.css manifest.json options.html popup.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

@@ -2,3 +2,4 @@ node_modules
 lib
 unknown
 .DS_Store
+build
