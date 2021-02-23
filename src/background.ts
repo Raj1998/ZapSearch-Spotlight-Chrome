@@ -1,3 +1,7 @@
+/**
+ * Variable for stroing bookmarks as
+ * key value pairs
+ */
 var bookmarks_map = {};
 
 /**
