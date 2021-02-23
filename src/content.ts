@@ -1,3 +1,8 @@
+/**
+ * Global STATE for storing 
+ * currently highlighted item's 
+ * index
+ */
 const GLOBAL_STATE = {
   highlighted: 0,
 };
