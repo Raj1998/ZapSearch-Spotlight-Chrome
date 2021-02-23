@@ -78,7 +78,7 @@ class BackgroundManager {
           function (tabs) {
             if (tabs[0].url == 'chrome://newtab/') {
               chrome.tabs.create({
-                url: 'spotlight-chrome.html',
+                url: 'options.html',
               });
             } else {
               if (!tabs[0].url.startsWith('chrome-extension:')) {

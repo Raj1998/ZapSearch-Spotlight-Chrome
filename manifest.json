@@ -9,7 +9,7 @@
       "activeTab", "declarativeContent", "storage",
       "chrome://favicon/"
     ],
-    "options_page": "spotlight-chrome.html",
+    "options_page": "options.html",
     "content_scripts": [
       {
         "matches": [
