@@ -1,12 +1,12 @@
 {
     "manifest_version": 2,
-    "name": "Spotlight Chrome",
+    "name": "ZapSearch - Spotlight for Chrome",
     "version": "0.1",
     "permissions": [
       "bookmarks",
       "tabs",
       "*://*/*",
-      "activeTab", "declarativeContent", "storage",
+      "activeTab",
       "chrome://favicon/"
     ],
     "options_page": "options.html",

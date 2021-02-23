@@ -152,6 +152,33 @@ class Utils {
   }
 
 
+  openUrl(url: string) {
+    if (url.startsWith('javascript: ')) {
+      // TODO: Cant do eval here
+      // console.log(url);
+      alert("Sorry, you can't open this.");
+      try {
+        chrome.runtime.sendMessage(
+          {
+            action: 'do-eval',
+            js: { code: url.split('javascript: ')[1] },
+          },
+          function () {}
+        );
+        // eval()
+      } catch (err) {
+        // ...
+        console.log('Cant eval');
+      }
+    } else if (url.startsWith('action:')) {
+      let action = url.split('action:')[1];
+      chrome.runtime.sendMessage({ action }, function () {});
+    } else {
+      window.open(url);
+      // window.open(url, "_blank", 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
+    }
+  }
+
   /**
    * Arrow function for creating the div
    * and setting all the 
@@ -263,33 +290,18 @@ class Utils {
             if (item) {
               let url = item.getAttribute('data-url');
               domUtil.removeSpotlightDiv();
-              if (url.startsWith('javascript: ')) {
-                // TODO: Cant do eval here
-                // console.log(url);
-                alert("Sorry, you can't open this.");
-                try {
-                  chrome.runtime.sendMessage(
-                    {
-                      action: 'do-eval',
-                      js: { code: url.split('javascript: ')[1] },
-                    },
-                    function () {}
-                  );
-                  // eval()
-                } catch (err) {
-                  // ...
-                  console.log('Cant eval');
-                }
-              } else if (url.startsWith('action:')) {
-                let action = url.split('action:')[1];
-                chrome.runtime.sendMessage({ action }, function () {});
-              } else {
-                window.open(url);
-                // window.open(url, "_blank", 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
-              }
+              
+              thisObj.openUrl(url);
             }
             domUtil.removeSpotlightDiv();
           }
+        });
+
+        let resultList = document.querySelector('.rpext-result-list');
+        resultList.addEventListener('click', (event: any) => {
+          let url = event.target.getAttribute('data-url');
+          thisObj.openUrl(url);
+          domUtil.removeSpotlightDiv();
         });
   
         // Optionally send response to the 
