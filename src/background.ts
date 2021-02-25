@@ -3,6 +3,7 @@
  * key value pairs
  */
 var bookmarks_map = {};
+var ranks = {}
 
 /**
  * Class for managing background actions 
@@ -17,20 +18,27 @@ class BackgroundManager {
    * to be consumed in the content script
    * @param bookmarks
    */
-  process_bookmark = async (bookmarks) => {
+  static process_bookmark = async (bookmarks) => {
     for (var i = 0; i < bookmarks.length; i++) {
       var bookmark = bookmarks[i];
 
       if (bookmark.url) {
-        let favicon = await this.fetchFavicon(bookmark.url);
+        let favicon = await BackgroundManager.fetchFavicon(bookmark.url);
         bookmarks_map[bookmark.title] = {
           favicon: favicon,
           url: bookmark.url,
         };
+        // chrome.storage.sync.get([bookmark.title], function (result) {
+          
+        //   let res = result[bookmark.title] || 0;
+        //   ranks[bookmark.title] = res;
+          
+        // });
+        ranks[bookmark.title] = ranks[bookmark.title] || 0
       }
 
       if (bookmark.children) {
-        this.process_bookmark(bookmark.children);
+        BackgroundManager.process_bookmark(bookmark.children);
       }
     }
   };
@@ -41,7 +49,7 @@ class BackgroundManager {
    * bookmarks' url from chrome://favicon
    * @param url
    */
-  fetchFavicon = (url) => {
+  static fetchFavicon = (url) => {
     return new Promise(function (resolve, reject) {
       var img = new Image();
       img.onload = function () {
@@ -63,8 +71,9 @@ class BackgroundManager {
   /**
    * Fetching bookmarks by getTree API
    */
-  fetchBookmarks() {
-    chrome.bookmarks.getTree(this.process_bookmark);
+   static fetchBookmarks = () => {
+    chrome.bookmarks.getTree(BackgroundManager.process_bookmark);
+
   }
 
   /**
@@ -85,10 +94,33 @@ class BackgroundManager {
                 url: 'options.html',
               });
             } else {
+              // console.log('a');
+              // let ranks = {}
+              // let allKeys = Object.keys(bookmarks_map);
+              // let shouldMoveForward = false;
+              // for (let i = 0; i < allKeys.length; i++) {
+              //   if (i === allKeys.length - 1) {
+              //     shouldMoveForward = true
+              //   }
+              //   const x = allKeys[i];
+              
+              //     let currUrl = bookmarks_map[x]['url'];
+              //     chrome.storage.sync.get([currUrl], function (result) {
+              //       let res = result[currUrl] || 0;
+              //       ranks[x] = res;
+              
+              //       if (shouldMoveForward) {
+              //         console.log(ranks);
+                      
+              //       }
+              //     });
+              // }
               if (!tabs[0].url.startsWith('chrome-extension:')) {
                 chrome.tabs.sendMessage(
                   tabs[0].id,
-                  { data: bookmarks_map },
+                  { data: bookmarks_map,
+                    ranks: ranks
+                  },
                   function (resp) {}
                 );
               }
@@ -104,7 +136,7 @@ class BackgroundManager {
    * of the extension
    */
   setUtilityListeners() {
-    chrome.runtime.onMessage.addListener(function (
+    chrome.runtime.onMessage.addListener( function (
       request,
       sender,
       sendResponse
@@ -124,12 +156,16 @@ class BackgroundManager {
           chrome.tabs.move(tab.id, { index: 0 });
         });
         sendResponse('OK');
-      } else if (request.action == 'do-eval') {
-        // eval(request.js.code);
+      } else if (request.action == 'prependedJs') {
         sendResponse('OK');
       } else if (request.action == 'settings') {
         chrome.tabs.create({
           url: 'chrome://settings',
+        });
+        sendResponse('OK');
+      } else if (request.action == 'history') {
+        chrome.tabs.create({
+          url: 'chrome://history',
         });
         sendResponse('OK');
       } else if (request.action == 'shortcuts') {
@@ -137,12 +173,64 @@ class BackgroundManager {
           url: 'chrome://extensions/shortcuts',
         });
         sendResponse('OK');
+      } else if (request.action == 'queryHistory') {
+        let historyData = {}
+        chrome.history.search({text: request.q, maxResults: 10},  function(data) {
+          data.forEach( async function(page, idx) {
+          let favicon = await BackgroundManager.fetchFavicon(page.url);
+            historyData[page.title] =  {
+              favicon: favicon,
+              url: page.url,
+              type: 'history'
+            };
+            if (idx === data.length - 1) {
+            sendResponse(historyData)
+            }
+          });
+          
+        })
+        return true;
+      } else if (request.action == 'queryBookmarks') {
+        BackgroundManager.fetchBookmarks()
+        // console.log(bookmarks_map, Object.keys(bookmarks_map).length);
+        sendResponse({bm: bookmarks_map})
+        return true;
+      } else if (request.action == 'queryGoogle') {
+        window.open(`https://www.google.com/search?q=${request.q}`)
+        sendResponse('OK')
       }
+
+
+
     });
   }
 }
 
+// chrome.storage.sync.get(null, function(items) {
+
+//   var allKeys = Object.keys(items);
+//   for (let i of allKeys){
+//     console.log(i, items[i]);
+    
+//   }
+  
+// });
+
 const bgManager = new BackgroundManager();
-bgManager.fetchBookmarks();
+BackgroundManager.fetchBookmarks();
 bgManager.setLaunchListener();
 bgManager.setUtilityListeners();
+
+// chrome.storage.sync.set({key: 'raj'}, function() {
+//   console.log('Value is set to ' + 'raj');
+// });
+
+// chrome.storage.sync.get(['key'], function(result) {
+//   console.log('Value currently is ' + result.key);
+// });
+
+// chrome.history.search({text: 'stack', maxResults: 10}, function(data) {
+//   data.forEach(function(page) {
+//       console.log(page, page.url);
+//   });
+// });

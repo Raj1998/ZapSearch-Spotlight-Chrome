@@ -7,7 +7,9 @@
       "tabs",
       "*://*/*",
       "activeTab",
-      "chrome://favicon/"
+      "chrome://favicon/",
+      "storage",
+      "history"
     ],
     "options_page": "options.html",
     "content_scripts": [
@@ -30,7 +32,7 @@
           "windows": "Ctrl+Shift+P",
           "mac": "Command+Shift+P"
         },
-        "description": "Hot-key to trigger search bar"
+        "description": "Hot-key to Trigger ZapSearchBar"
       }
     },
     "browser_action": {
