@@ -3,26 +3,49 @@
   <head>
     <style>
       body {
-        width: 300px;
-        height: 200px;
+        width: 380px;
+      }
+      .__rpext-body {
+        font-family: 'Helvetica', 'Arial', sans-serif;
+      }
+      #if-not-found {
+        color: rgb(255, 94, 94);
+      }
+      .__rpext-header {
+        display: flex;
+      }
+      .__rpext-header img, .__rpext-content {
+        margin: .83em;
       }
     </style>
   </head>
-  <body>
-    <h1>Spotlight for Chrome</h1>
-    <h3>Default Shortcut to launch</h3>
-    <p>Mac: "Command+Shift+P"</p>
-    <p>Windows: "Ctrl+Shift+P"</p>
-    <a href="options.html" target="_blank">Settings</a>
-    <button id="ext-shortcut">Change shortcut</button>
-    <button id="clear-storage-btn">Clear Storage</button>
-    <div id="curr-shortcut"></div>
+  <body class="__rpext-body">
+    <div class="__rpext-header">
+      <img src="icons/icon_128.png" height="48px" /><h2>ZapSearch - Spotlight for Chrome</h2>
+    </div>
+    <hr>
 
-    <h3>Usage</h3>
+    <div class="__rpext-content">
+
+    
+    <h3>Default Shortcut to launch</h3>
+    <p>"Ctrl+Shift+L" or "Command+Shift+L"</p>
+
+    <button id="ext-shortcut">Change shortcut</button>
+    <button id="clear-storage-btn">Reset Ranking</button>
+    <hr>
+    <h3>Current Shortcut to launch: <span id="curr-shortcut"> <span id="if-not-found">Not Found. Click 'Change Shortcut' Button ASAP</span> </span></h3>
+    
+     <hr>
+    <h3>Usage - Prepend following characters</h3>
     <p> '>' -> Commands </p>
     <p> '@' -> History </p>
     <p> '?' -> Google Search </p>
+    <hr>
+    <p>Example: '@ Stack overflow' - to search <strong> History </strong> with 'Stack overflow'</p>
+    <p>Example: 'Stack overflow' - to search <strong> Bookmarks </strong> with 'Stack overflow'</p>
 
+    </div>
     <script src="lib/options.js"></script>
   </body>
 </html>

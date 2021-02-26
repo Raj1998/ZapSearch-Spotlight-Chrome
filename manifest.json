@@ -1,6 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "ZapSearch - Spotlight for Chrome",
+    "name": "ZapSearch",
+    "description": "Spotlight Search for Chrome. Blazing fast search for Bookmarks, History and Special commands",
     "version": "0.1",
     "permissions": [
       "bookmarks",
@@ -29,8 +30,10 @@
     "commands": {
       "launch-spotlight": {
         "suggested_key": {
-          "windows": "Ctrl+Shift+P",
-          "mac": "Command+Shift+P"
+          "windows": "Ctrl+Shift+L",
+          "linux": "Ctrl+Shift+L",
+          "chromeos": "Ctrl+Shift+L",
+          "mac": "Command+Shift+L"
         },
         "description": "Hot-key to Trigger ZapSearchBar"
       }
