@@ -92,6 +92,7 @@ class BackgroundManager {
             
               
               if (!tabs[0].url.startsWith('chrome://') && 
+              !tabs[0].url.startsWith('chrome-extension://') && 
               !tabs[0].url.startsWith('https://chrome.google.com/') &&
               !tabs[0].url.startsWith('https://chrome.google.com/')
               ) {
