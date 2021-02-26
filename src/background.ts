@@ -28,7 +28,7 @@ class BackgroundManager {
           favicon: favicon,
           url: bookmark.url,
         };
-        // chrome.storage.sync.get([bookmark.title], function (result) {
+        // chrome.storage.local.get([bookmark.title], function (result) {
           
         //   let res = result[bookmark.title] || 0;
         //   ranks[bookmark.title] = res;
@@ -89,33 +89,13 @@ class BackgroundManager {
         chrome.tabs.query(
           { active: true, currentWindow: true },
           function (tabs) {
-            if (tabs[0].url == 'chrome://newtab/') {
-              chrome.tabs.create({
-                url: 'options.html',
-              });
-            } else {
-              // console.log('a');
-              // let ranks = {}
-              // let allKeys = Object.keys(bookmarks_map);
-              // let shouldMoveForward = false;
-              // for (let i = 0; i < allKeys.length; i++) {
-              //   if (i === allKeys.length - 1) {
-              //     shouldMoveForward = true
-              //   }
-              //   const x = allKeys[i];
+            
               
-              //     let currUrl = bookmarks_map[x]['url'];
-              //     chrome.storage.sync.get([currUrl], function (result) {
-              //       let res = result[currUrl] || 0;
-              //       ranks[x] = res;
-              
-              //       if (shouldMoveForward) {
-              //         console.log(ranks);
-                      
-              //       }
-              //     });
-              // }
-              if (!tabs[0].url.startsWith('chrome-extension:')) {
+              if (!tabs[0].url.startsWith('chrome://') && 
+              !tabs[0].url.startsWith('https://chrome.google.com/') &&
+              !tabs[0].url.startsWith('https://chrome.google.com/')
+              ) {
+                
                 chrome.tabs.sendMessage(
                   tabs[0].id,
                   { data: bookmarks_map,
@@ -124,10 +104,18 @@ class BackgroundManager {
                   function (resp) {}
                 );
               }
-            }
+            
           }
         );
       }
+    });
+
+    chrome.runtime.onInstalled.addListener(function() {
+      chrome.tabs.create({"url":"popup.html"})
+    });
+    
+    chrome.runtime.setUninstallURL("https://raj1998.github.io/zap-search/uninstalled", () => {
+      console.log('removed');      
     });
   }
 
@@ -206,7 +194,7 @@ class BackgroundManager {
   }
 }
 
-// chrome.storage.sync.get(null, function(items) {
+// chrome.storage.local.get(null, function(items) {
 
 //   var allKeys = Object.keys(items);
 //   for (let i of allKeys){
@@ -221,11 +209,11 @@ BackgroundManager.fetchBookmarks();
 bgManager.setLaunchListener();
 bgManager.setUtilityListeners();
 
-// chrome.storage.sync.set({key: 'raj'}, function() {
+// chrome.storage.local.set({key: 'raj'}, function() {
 //   console.log('Value is set to ' + 'raj');
 // });
 
-// chrome.storage.sync.get(['key'], function(result) {
+// chrome.storage.local.get(['key'], function(result) {
 //   console.log('Value currently is ' + result.key);
 // });
 

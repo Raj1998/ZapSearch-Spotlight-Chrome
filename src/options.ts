@@ -45,7 +45,7 @@ class OptionsClass {
         let clearStorageBtn = document.querySelector("#clear-storage-btn");
         if (clearStorageBtn) {
             clearStorageBtn.addEventListener("click", () => {
-                chrome.storage.sync.clear(function() {
+                chrome.storage.local.clear(function() {
                     var error = chrome.runtime.lastError;
                     if (error) {
                         console.error(error);

@@ -119,7 +119,7 @@ class Utils {
         } else {
           // TODO: Remove this else
 
-          chrome.storage.sync.get([currUrl], function (result) {
+          chrome.storage.local.get([currUrl], function (result) {
             let res = result[currUrl] || 0;
             filteredDataArray.push([res, x]);
             filteredData[x]['rank'] = res;
@@ -295,7 +295,7 @@ class Utils {
             // console.log(resp, Object.keys(resp.bm).length);
             GLOBAL_STATE.bm = resp.bm;
 
-            chrome.storage.sync.get(null, function (items) {
+            chrome.storage.local.get(null, function (items) {
               GLOBAL_STATE.ranks = items;
               thisObj.filterResults('', resp.bm, 'bookmarks', items);
               GLOBAL_STATE.highlighted = 0;
@@ -425,12 +425,12 @@ class Utils {
   };
 
   incrementCount(key) {
-    chrome.storage.sync.get([key], function (result) {
+    chrome.storage.local.get([key], function (result) {
       let res = result[key] || 0;
       // console.log(res, 'getting ');
       res += 1;
 
-      chrome.storage.sync.set({ [key]: res }, function () {
+      chrome.storage.local.set({ [key]: res }, function () {
         // console.log(key, ' is setting to ' + res);
       });
     });
@@ -438,7 +438,7 @@ class Utils {
 
   getLocalStorage(key) {
     let res;
-    chrome.storage.sync.get([key], function (result) {
+    chrome.storage.local.get([key], function (result) {
       res = result[key];
       // console.log('incall', res);
       return 'result[key]';
