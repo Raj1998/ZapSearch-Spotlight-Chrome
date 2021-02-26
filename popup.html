@@ -11,12 +11,23 @@
       #if-not-found {
         color: rgb(255, 94, 94);
       }
+      #curr-shortcut {
+        color: rgb(255, 94, 94);
+        font-size: 28px;
+      }
       .__rpext-header {
         display: flex;
       }
       .__rpext-header img,
       .__rpext-content {
         margin: 0.83em;
+      }
+      .__rpext-action-icon {
+        color: rgb(225, 70, 65);
+        font-weight: 500;
+      }
+      .__rpext-action {
+        font-size: medium;
       }
     </style>
   </head>
@@ -45,10 +56,12 @@
       <button id="clear-storage-btn">Reset Ranking</button>
 
       <hr />
+      <div class="__rpext-action">
       <h3>Usage - Prepend following characters</h3>
-      <p>'>' To run Commands</p>
-      <p>'@' To Search in History</p>
-      <p>'?' To Google Search</p>
+      <p><span class="__rpext-action-icon">></span> To run Commands</p>
+      <p><span class="__rpext-action-icon">@</span> To Search in History</p>
+      <p><span class="__rpext-action-icon">?</span> To Google Search</p>
+    </div>
       <hr />
       <p>
         Example: '@ Stack overflow' - to search <strong> History </strong> with
