@@ -115,7 +115,6 @@ class BackgroundManager {
     });
     
     chrome.runtime.setUninstallURL("https://raj1998.github.io/zap-search/uninstalled", () => {
-      console.log('removed');      
     });
   }
 
@@ -186,7 +185,39 @@ class BackgroundManager {
       } else if (request.action == 'queryGoogle') {
         window.open(`https://www.google.com/search?q=${request.q}`)
         sendResponse('OK')
+      } else if (request.action == 'deDuplicate') {
+        var mySet = new Set();
+        chrome.tabs.query({ currentWindow: true }, (tabs) => {
+          for(let i = 0; i < tabs.length; i++){
+            if (mySet.has(tabs[i].url)) {
+              console.log('av');
+              
+              chrome.tabs.remove(tabs[i].id);
+            }
+            else{
+              mySet.add(tabs[i].url);
+            }
+          }
+        })
+        sendResponse('OK')
+      } else if (request.action == 'deDuplicateAll') {
+        var mySet = new Set();
+        chrome.tabs.query({}, (tabs) => {
+          for(let i = 0; i < tabs.length; i++){
+            if (mySet.has(tabs[i].url)) {
+              console.log('av');
+              
+              chrome.tabs.remove(tabs[i].id);
+            }
+            else{
+              mySet.add(tabs[i].url);
+            }
+          }
+        })
+
+        sendResponse('OK')
       }
+      
 
 
 

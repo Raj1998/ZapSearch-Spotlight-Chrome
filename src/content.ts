@@ -332,6 +332,14 @@ class Utils {
                 url: 'action:duplicate',
                 favicon: imgURL,
               },
+              '"Close Duplicated" tabs in the "Current Window"': {
+                url: 'action:deDuplicate',
+                favicon: imgURL,
+              },
+              '"Close Duplicated" tabs across "All the Windows"': {
+                url: 'action:deDuplicateAll',
+                favicon: imgURL,
+              },
             };
 
             thisObj.filterResults(
