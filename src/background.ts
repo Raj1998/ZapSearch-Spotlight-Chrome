@@ -21,7 +21,7 @@ class BackgroundManager {
   static process_bookmark = async (bookmarks) => {
     for (var i = 0; i < bookmarks.length; i++) {
       var bookmark = bookmarks[i];
-
+      
       if (bookmark.url) {
         let favicon = await BackgroundManager.fetchFavicon(bookmark.url);
         bookmarks_map[bookmark.title] = {
@@ -191,8 +191,6 @@ class BackgroundManager {
         chrome.tabs.query({ currentWindow: true }, (tabs) => {
           for(let i = 0; i < tabs.length; i++){
             if (mySet.has(tabs[i].url)) {
-              console.log('av');
-              
               chrome.tabs.remove(tabs[i].id);
             }
             else{
