@@ -115,7 +115,7 @@ class BackgroundManager {
       chrome.tabs.create({"url":"popup.html"})
     });
     
-    chrome.runtime.setUninstallURL("https://raj1998.github.io/zap-search/uninstalled", () => {
+    chrome.runtime.setUninstallURL("https://raj1998.github.io/zap-search?action=uninstalled", () => {
     });
   }
 
