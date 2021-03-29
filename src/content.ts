@@ -232,7 +232,7 @@ class Utils {
         );
       } catch (err) {
         // ...
-        console.log('Cant eval');
+        // console.log('Cant eval');
       }
     } else if (url.startsWith('action:')) {
       let action = url.split('action:')[1];
@@ -390,13 +390,7 @@ class Utils {
               '.rpext-input'
             ) as HTMLInputElement).value;
             if (qVal.startsWith('?')) {
-              chrome.runtime.sendMessage(
-                {
-                  action: 'queryGoogle',
-                  q: qVal.split('?')[1].trim(),
-                },
-                function () {}
-              );
+              window.open(`https://www.google.com/search?q=${qVal.split('?')[1].trim()}`)
               domUtil.removeSpotlightDiv();
             } else {
               let item = document.querySelector('.rpext-result-focused');

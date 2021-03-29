@@ -38,6 +38,9 @@ class BackgroundManager {
       }
 
       if (bookmark.children) {
+        bookmark.children.forEach ( bm => {
+          bm.title = `${bookmark.title}/${bm.title}`
+        })
         BackgroundManager.process_bookmark(bookmark.children);
       }
     }
@@ -89,9 +92,13 @@ class BackgroundManager {
         chrome.tabs.query(
           { active: true, currentWindow: true },
           function (tabs) {
-            
+              if(tabs[0].url.startsWith('chrome://') ) {
+                
+                chrome.tabs.create({"url":"blank.html"})
+               
+              }            
               
-              if (!tabs[0].url.startsWith('chrome://') && 
+              else if (!tabs[0].url.startsWith('chrome://') && 
               !tabs[0].url.startsWith('chrome-extension://') && 
               !tabs[0].url.startsWith('https://chrome.google.com/') &&
               !tabs[0].url.startsWith('https://chrome.google.com/')
@@ -112,10 +119,12 @@ class BackgroundManager {
     });
 
     chrome.runtime.onInstalled.addListener(function() {
-      chrome.tabs.create({"url":"popup.html"})
+      // chrome.tabs.create({"url":"popup.html"})
+      chrome.tabs.create({"url":"https://raj1998.github.io/zap-search/#help"})
+
     });
     
-    chrome.runtime.setUninstallURL("https://raj1998.github.io/zap-search?action=uninstalled", () => {
+    chrome.runtime.setUninstallURL("https://raj1998.github.io/zap-search/#feedback", () => {
     });
   }
 

@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "ZapSearch ⚡️",
     "description": "Spotlight Search for Chrome. The ⚡️ Blazing fast ⚡️ search for Bookmarks, History and Special commands.",
-    "version": "0.1",
+    "version": "0.1.1",
     "permissions": [
       "bookmarks",
       "tabs",

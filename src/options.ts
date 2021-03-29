@@ -15,7 +15,8 @@ class OptionsClass {
             chrome.commands.getAll(function (a) {
                 for (var b = 0; b < a.length; b++)
                   if ('launch-spotlight' == a[b].name){
-                      document.querySelector("#curr-shortcut").innerHTML = a[b].shortcut
+                        if (a[b].shortcut)
+                            document.querySelector("#curr-shortcut").innerHTML = a[b].shortcut
                   }
               });
         }
@@ -65,3 +66,5 @@ class OptionsClass {
 const myObj = new OptionsClass()
 myObj.getCurrentLaunchShortcut()
 myObj.setClickListener()
+
+// console.log(window.location.href, ' opt');
