@@ -14,7 +14,7 @@
   },
   "scripts": {
     "tsc-watch": "tsc --watch src/*.ts --outDir ./lib",
-    "build": "tsc src/*.ts --outDir ./lib && rm -f build.zip && zip -r build.zip ./icons ./lib content.css manifest.json options.html popup.html",
+    "build": "tsc src/*.ts --outDir ./lib && rm -f build.zip && zip -r build.zip ./icons ./lib content.css manifest.json *.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
