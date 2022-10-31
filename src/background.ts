@@ -12,7 +12,7 @@ var ranks = {}
  * whole chrome browser, not for a single 
  * webpage.
  */
-class BackgroundManager {
+ class BackgroundManager {
   /**
    * Processing bookmarks in a dictionary
    * to be consumed in the content script
@@ -76,7 +76,33 @@ class BackgroundManager {
    */
    static fetchBookmarks = () => {
     chrome.bookmarks.getTree(BackgroundManager.process_bookmark);
+  }
 
+
+  static sendEventToContentScript = () => {
+    chrome.tabs.query(
+      { active: true, currentWindow: true },
+      function (tabs) {
+          if(tabs[0].url.startsWith('chrome://') ) {
+
+            chrome.tabs.create({"url":"blank.html"})
+
+          }
+
+          else if (!tabs[0].url.startsWith('chrome://') && 
+          // !tabs[0].url.startsWith('chrome-extension://') && 
+          !tabs[0].url.startsWith('https://chrome.google.com/')
+          ) {
+
+            chrome.tabs.sendMessage(
+              tabs[0].id,
+              { data: bookmarks_map,ranks: ranks },
+              function (resp) {}
+            );
+          }
+        
+      }
+    );
   }
 
   /**
@@ -89,32 +115,7 @@ class BackgroundManager {
   setLaunchListener() {
     chrome.commands.onCommand.addListener(function (command) {
       if (command === 'launch-spotlight') {
-        chrome.tabs.query(
-          { active: true, currentWindow: true },
-          function (tabs) {
-              if(tabs[0].url.startsWith('chrome://') ) {
-                
-                chrome.tabs.create({"url":"blank.html"})
-               
-              }            
-              
-              else if (!tabs[0].url.startsWith('chrome://') && 
-              !tabs[0].url.startsWith('chrome-extension://') && 
-              !tabs[0].url.startsWith('https://chrome.google.com/') &&
-              !tabs[0].url.startsWith('https://chrome.google.com/')
-              ) {
-                
-                chrome.tabs.sendMessage(
-                  tabs[0].id,
-                  { data: bookmarks_map,
-                    ranks: ranks
-                  },
-                  function (resp) {}
-                );
-              }
-            
-          }
-        );
+        BackgroundManager.sendEventToContentScript()
       }
     });
 
@@ -223,6 +224,8 @@ class BackgroundManager {
         })
 
         sendResponse('OK')
+      } else if (request.action === 'launchNow') {
+        BackgroundManager.sendEventToContentScript()
       }
       
 
