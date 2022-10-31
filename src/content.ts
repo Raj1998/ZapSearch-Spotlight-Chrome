@@ -21,6 +21,9 @@ class DomUtils {
    */
   keyPress = (event) => {
     if (event.key == 'Escape') {
+      if (window.location.href === `chrome-extension://${chrome.runtime.id}/blank.html`) 
+        window.close()
+      
       if (this.doesSpotlightDivExist()) this.removeSpotlightDiv();
     }
   };
@@ -33,6 +36,10 @@ class DomUtils {
     if (outerWrapper !== null) {
       outerWrapper.remove();
     }
+
+    if (window.location.href === `chrome-extension://${chrome.runtime.id}/blank.html`) 
+        window.close()
+    
   }
 
   /**
@@ -238,7 +245,15 @@ class Utils {
       let action = url.split('action:')[1];
       chrome.runtime.sendMessage({ action }, function () {});
     } else {
-      window.open(url);
+
+      if (window.location.href === `chrome-extension://${chrome.runtime.id}/blank.html`)
+        window.open(url, '_self');
+      else
+        window.open(url);
+      // console.log();
+      // console.log(window.location.href);
+      
+      
       // window.open(url, "_blank", 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
     }
 
@@ -287,6 +302,8 @@ class Utils {
 
         wrapperDiv.addEventListener('click', () => {
           domUtil.removeSpotlightDiv();
+          if (window.location.href === `chrome-extension://${chrome.runtime.id}/blank.html`) 
+            window.close()
         });
 
         chrome.runtime.sendMessage(
@@ -450,7 +467,7 @@ class Utils {
   }
 }
 
-function main() {
+function main() {  
   const domUtil = new DomUtils();
   const util = new Utils();
 
@@ -458,6 +475,16 @@ function main() {
   // some reasons so util object has
   // been passed as parameter
   util.createDivAndSetListeners(domUtil, util);
+
+  // Event to immediately trigger the ZapSearch on blank.html page
+  if (window.location.href === `chrome-extension://${chrome.runtime.id}/blank.html`) {
+    chrome.runtime.sendMessage(
+      { action: 'launchNow' },
+      function (resp) {
+      }
+    );
+  }
+
 }
 
 main();
