@@ -37,8 +37,6 @@ class DomUtils {
       outerWrapper.remove();
     }
 
-    if (window.location.href === `chrome-extension://${chrome.runtime.id}/blank.html`) 
-        window.close()
     
   }
 
