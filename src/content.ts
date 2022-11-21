@@ -435,6 +435,8 @@ class Utils {
       } else {
         domUtil.removeSpotlightDiv();
         sendResponse({ confirmation: 'Successfully Removed div' });
+        if (window.location.href === `chrome-extension://${chrome.runtime.id}/blank.html`) 
+            window.close()
       }
     });
 
