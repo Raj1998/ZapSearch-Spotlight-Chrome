@@ -12,5 +12,4 @@
 
 ### Bugs 
 
-- Can't launch on New Tab
 - After installation can't launch it on older tabs
