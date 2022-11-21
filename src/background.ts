@@ -4,6 +4,7 @@
  */
 var bookmarks_map = {};
 var ranks = {}
+var isFirstCall = true
 
 /**
  * Class for managing background actions 
@@ -19,6 +20,11 @@ var ranks = {}
    * @param bookmarks
    */
   static process_bookmark = async (bookmarks) => {
+    if (isFirstCall === true) {
+      bookmarks_map = {}
+      isFirstCall = false;
+    }
+        
     for (var i = 0; i < bookmarks.length; i++) {
       var bookmark = bookmarks[i];
 
@@ -75,6 +81,7 @@ var ranks = {}
    * Fetching bookmarks by getTree API
    */
    static fetchBookmarks = () => {
+    isFirstCall = true;
     chrome.bookmarks.getTree(BackgroundManager.process_bookmark);
   }
 
@@ -112,7 +119,7 @@ var ranks = {}
    * When triggered checking for new tab,
    * because it cannot be launched on new tab
    */
-  setLaunchListener() {
+  static setLaunchListener = () => {
     chrome.commands.onCommand.addListener(function (command) {
       if (command === 'launch-spotlight') {
         BackgroundManager.sendEventToContentScript()
@@ -121,7 +128,7 @@ var ranks = {}
 
     chrome.runtime.onInstalled.addListener(function() {
       // chrome.tabs.create({"url":"popup.html"})
-      chrome.tabs.create({"url":"https://raj1998.github.io/zap-search/#help"})
+      chrome.tabs.create({"url":"https://raj1998.github.io/zap-search/#changeLogs"})
 
     });
     
@@ -133,7 +140,7 @@ var ranks = {}
    * Utility event listeners for functionality
    * of the extension
    */
-  setUtilityListeners() {
+  static setUtilityListeners = () => {
     chrome.runtime.onMessage.addListener( function (
       request,
       sender,
@@ -190,8 +197,8 @@ var ranks = {}
         return true;
       } else if (request.action == 'queryBookmarks') {
         BackgroundManager.fetchBookmarks()
-        // console.log(bookmarks_map, Object.keys(bookmarks_map).length);
-        sendResponse({bm: bookmarks_map})
+
+        sendResponse({bm: {...bookmarks_map}})
         return true;
       } else if (request.action == 'queryGoogle') {
         window.open(`https://www.google.com/search?q=${request.q}`)
@@ -247,8 +254,8 @@ var ranks = {}
 
 const bgManager = new BackgroundManager();
 BackgroundManager.fetchBookmarks();
-bgManager.setLaunchListener();
-bgManager.setUtilityListeners();
+BackgroundManager.setLaunchListener();
+BackgroundManager.setUtilityListeners();
 
 // chrome.storage.local.set({key: 'raj'}, function() {
 //   console.log('Value is set to ' + 'raj');
