@@ -29,9 +29,9 @@ var isFirstCall = true
       var bookmark = bookmarks[i];
 
       if (bookmark.url) {
-        let favicon = await BackgroundManager.fetchFavicon(bookmark.url);
+        // let favicon = await BackgroundManager.fetchFavicon(bookmark.url);
         bookmarks_map[bookmark.title] = {
-          favicon: favicon,
+          favicon: '',
           url: bookmark.url,
         };
         // chrome.storage.local.get([bookmark.title], function (result) {
@@ -53,28 +53,31 @@ var isFirstCall = true
   };
 
 
+  // TODO: var img = new Image(); 
+  // this is not allowed in background worker from manifest v3
+  // Needs to be fixed
   /**
    * Fetching all the favicons for the
    * bookmarks' url from chrome://favicon
    * @param url
    */
-  static fetchFavicon = (url) => {
-    return new Promise(function (resolve, reject) {
-      var img = new Image();
-      img.onload = function () {
-        var canvas = document.createElement('canvas');
-        canvas.width = (this as any).width;
-        canvas.height = (this as any).height;
+  // static fetchFavicon = (url) => {
+  //   return new Promise(function (resolve, reject) {
+  //     var img = new Image();
+  //     img.onload = function () {
+  //       var canvas = document.createElement('canvas');
+  //       canvas.width = (this as any).width;
+  //       canvas.height = (this as any).height;
 
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(this as any, 0, 0);
+  //       var ctx = canvas.getContext('2d');
+  //       ctx.drawImage(this as any, 0, 0);
 
-        var dataURL = canvas.toDataURL('image/png');
-        resolve(dataURL);
-      };
-      img.src = 'chrome://favicon/' + url;
-    });
-  };
+  //       var dataURL = canvas.toDataURL('image/png');
+  //       resolve(dataURL);
+  //     };
+  //     img.src = 'chrome://favicon/' + url;
+  //   });
+  // };
 
   
   /**
@@ -182,9 +185,9 @@ var isFirstCall = true
         let historyData = {}
         chrome.history.search({text: request.q, maxResults: 10},  function(data) {
           data.forEach( async function(page, idx) {
-          let favicon = await BackgroundManager.fetchFavicon(page.url);
+          // let favicon = await BackgroundManager.fetchFavicon(page.url);
             historyData[page.title] =  {
-              favicon: favicon,
+              favicon: '',
               url: page.url,
               type: 'history'
             };

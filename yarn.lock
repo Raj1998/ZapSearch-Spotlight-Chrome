@@ -33,10 +33,10 @@
     consola "^2.15.0"
     node-fetch "^2.6.1"
 
-"@types/chrome@^0.0.132":
-  version "0.0.132"
-  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.132.tgz#8134139bf18ca38374bfc3dcac4a596b014c1946"
-  integrity sha512-+yTDaSmY+hCEoB0dIG4OeiVOPpvlDcjLcExtZqJEWv7NCSVnX9AfSUWyzlgK0Kd6yXKpDOjK/pZkeX4ElTzNKA==
+"@types/chrome@^0.0.272":
+  version "0.0.272"
+  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.272.tgz#a74d2075d306b4d15d72bf1e57dc80316a280f6c"
+  integrity sha512-9cxDmmgyhXV8gsZvlRjqaDizNjIjbV0spsR0fIEaQUoHtbl9D8VkTOLyONgiBKK+guR38x5eMO3E3avUYOXwcQ==
   dependencies:
     "@types/filesystem" "*"
     "@types/har-format" "*"

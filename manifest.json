@@ -1,12 +1,11 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "ZapSearch ⚡️",
     "description": "Spotlight Search for Chrome. The ⚡️ Blazing fast ⚡️ search for Bookmarks, History and Special commands.",
-    "version": "0.1.4",
+    "version": "0.2.0",
     "permissions": [
       "bookmarks",
       "tabs",
-      "chrome://favicon/",
       "storage",
       "history"
     ],
@@ -19,9 +18,7 @@
       }
     ],
     "background": {
-      "scripts": [
-        "lib/background.js"
-      ]
+      "service_worker": "lib/background.js"
     },
     "commands": {
       "launch-spotlight": {
@@ -34,7 +31,7 @@
         "description": "Hot-key to Trigger ZapSearchBar"
       }
     },
-    "browser_action": {
+    "action": {
       "default_popup": "popup.html"
     },
     "icons": { 
@@ -43,7 +40,9 @@
      "128": "icons/icon_128.png" 
     },
     "web_accessible_resources": [
-      "icons/*",
-      "*.html"
+      {
+        "resources": ["icons/*", "*.html"],
+        "matches": ["<all_urls>"]
+      }
     ]
   }

@@ -95,8 +95,8 @@ class Utils {
 
     let filteredData = {};
     let queryLength = query.length;
-    let starImgURL = chrome.extension.getURL('icons/star.png');
-    let historyImgURL = chrome.extension.getURL('icons/history.png');
+    let starImgURL = chrome.runtime.getURL('icons/star.png');
+    let historyImgURL = chrome.runtime.getURL('icons/history.png');
 
     let filteredDataArray = [];
 
@@ -325,7 +325,7 @@ class Utils {
           let inpVal = (e.target as HTMLInputElement).value;
 
           if (inpVal.startsWith('>')) {
-            var imgURL = chrome.extension.getURL('icons/tabs.png');
+            var imgURL = chrome.runtime.getURL('icons/tabs.png');
             let actions = {
               'Open Chrome "Settings"': {
                 url: 'action:settings',
