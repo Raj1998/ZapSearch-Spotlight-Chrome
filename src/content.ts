@@ -241,7 +241,15 @@ class Utils {
       }
     } else if (url.startsWith('action:')) {
       let action = url.split('action:')[1];
-      chrome.runtime.sendMessage({ action }, function () {});
+      let bodyText = '';
+      if (action === 'summarize') {
+        bodyText = document.body.innerText.slice(0, 8000);
+      }
+      chrome.runtime.sendMessage({ action, bodyText }, response => {
+        if (action === 'summarize') {
+          console.log('Summarizing this page ', response);
+        }
+      });
     } else {
 
       if (window.location.href === `chrome-extension://${chrome.runtime.id}/blank.html`)
@@ -327,6 +335,10 @@ class Utils {
           if (inpVal.startsWith('>')) {
             var imgURL = chrome.runtime.getURL('icons/tabs.png');
             let actions = {
+              'Summarize this page': {
+                url: 'action:summarize',
+                favicon: imgURL,
+              },
               'Open Chrome "Settings"': {
                 url: 'action:settings',
                 favicon: imgURL,

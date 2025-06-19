@@ -7,8 +7,11 @@
       "bookmarks",
       "tabs",
       "storage",
-      "history"
+      "history",
+      "activeTab",
+      "scripting"
     ],
+    "host_permissions": ["https://generativelanguage.googleapis.com/*"],
     "options_page": "options.html",
     "content_scripts": [
       {

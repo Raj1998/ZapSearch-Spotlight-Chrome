@@ -150,18 +150,19 @@ var isFirstCall = true
       sendResponse
     ) {
       if (request.action == 'duplicate') {
-        chrome.tabs.getSelected(null, (tab) => {
-          chrome.tabs.duplicate(tab.id);
+
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          chrome.tabs.duplicate(tabs[0].id);
         });
         sendResponse('OK');
       } else if (request.action == 'move-end') {
-        chrome.tabs.getSelected(null, (tab) => {
-          chrome.tabs.move(tab.id, { index: -1 });
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          chrome.tabs.move(tabs[0].id, { index: -1 });
         });
         sendResponse('OK');
       } else if (request.action == 'move-start') {
-        chrome.tabs.getSelected(null, (tab) => {
-          chrome.tabs.move(tab.id, { index: 0 });
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          chrome.tabs.move(tabs[0].id, { index: 0 });
         });
         sendResponse('OK');
       } else if (request.action == 'prependedJs') {
@@ -236,13 +237,43 @@ var isFirstCall = true
         sendResponse('OK')
       } else if (request.action === 'launchNow') {
         BackgroundManager.sendEventToContentScript()
+      } else if (request.action === 'summarize') {
+
+        var text = request.bodyText || 'This is default text to summarize.';
+        BackgroundManager.callGemini(text)
+          .then( summary => sendResponse({summary}) )
+          .catch( err => {
+            console.error('Error summarizing text:', err);
+            sendResponse({summary: 'Error summarizing text.' })
+          });
+        return true; // Indicates that the response will be sent asynchronously
       }
-      
-
-
 
     });
   }
+
+
+
+  static callGemini = async (text) => {
+
+    const API_KEY = 'AIzaSyDzHte6fJPQp7vR-yQS1tJbF-VaVcjOJCc';
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-thinking-exp-01-21:generateContent?key=${API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `Summarize this text of a web page:\n\n${text}`  }] }]
+        })
+      }
+    );
+    const data = await response.json();
+    const summary = data?.candidates?.[0]?.content?.parts?.[0]?.text || "No summary available";
+    return summary;
+  }
+
 }
 
 // chrome.storage.local.get(null, function(items) {
