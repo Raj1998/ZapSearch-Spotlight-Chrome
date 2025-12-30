@@ -265,7 +265,7 @@ var isFirstCall = true
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: `Summarize this text of a web page:\n\n${text}`  }] }]
+          contents: [{ parts: [{ text: `I want you to act as a website summary creator. Keep the summary concise and to the point. Structure your summary like this first a small paragraph and next 4-8 bullet points, depending on the size of the passed text. Following is the text of a web page:\n\n${text}`  }] }]
         })
       }
     );

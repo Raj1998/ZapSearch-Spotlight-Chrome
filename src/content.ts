@@ -337,7 +337,7 @@ class Utils {
             let actions = {
               'Summarize this page': {
                 url: 'action:summarize',
-                favicon: imgURL,
+                favicon: chrome.runtime.getURL('icons/ai.png'),
               },
               'Open Chrome "Settings"': {
                 url: 'action:settings',
