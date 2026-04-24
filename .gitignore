@@ -3,3 +3,4 @@ lib
 unknown
 .DS_Store
 build*
+.tmp

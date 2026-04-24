@@ -141,62 +141,52 @@ class Utils {
     filteredDataArray.reverse();
 
     let results = ``;
-    for (let i = 0; i < filteredDataArray.length; i++) {
-      const key = filteredDataArray[i][1];
-      const value = filteredData[key];
+    if (filteredDataArray.length === 0) {
+      const emptyLabel = query === '' ? 'bookmarks' : query;
+      results = `
+        <div class="rpext-empty-state">
+          <div class="rpext-empty-state-title">No results for "${emptyLabel}"</div>
+          <div class="rpext-empty-state-copy">Try a different query or switch modes.</div>
+          <div class="rpext-empty-state-tips">
+            <div>Use <b>@</b> for History</div>
+            <div>Use <b>></b> for Commands</div>
+            <div>Use <b>?</b> for Google Search</div>
+          </div>
+        </div>`;
+    } else {
+      for (let i = 0; i < filteredDataArray.length; i++) {
+        const key = filteredDataArray[i][1];
+        const value = filteredData[key];
 
-      let index = value['index'];
-      let styledKey = `${key.slice(0, index)}<b>${key.slice(
-        index,
-        index + queryLength
-      )}</b>${key.slice(index + queryLength)}`;
+        let index = value['index'];
+        let styledKey = `${key.slice(0, index)}<b>${key.slice(
+          index,
+          index + queryLength
+        )}</b>${key.slice(index + queryLength)}`;
+        const fallbackIcon = value['type'] === 'history' ? historyImgURL : starImgURL;
+        const resultIcon = value['favicon'] && value['favicon'] !== '' ? value['favicon'] : fallbackIcon;
 
-      results += `
-                  <div
-                    class="rpext-result-item"
-                    data-url='${value['url']}'
-                    data-key='${key}'
-                  >
-                  ${
-                    typeOfTabs === 'bookmarks'
-                      ? `
-                      <img
-                        class="rpext-result-item-favicon"
-                        alt="Problems - LeetCode"
-                        src="${
-                          value['type'] === 'history'
-                            ? historyImgURL
-                            : starImgURL
-                        }"
-                        />`
-                      : ``
-                  }
-                  ${
-                    value['favicon'] !== ''
-                      ? `
-                    <img
-                      class="rpext-result-item-favicon"
-                      alt="Problems - LeetCode"
-                      src="${value['favicon']}"
-                    />
-                    `
-                      : ``
-                  }
-            
-                    <div class="rpext-result-item-title">${styledKey}</div>
-                  </div>
-                  `;
+        results += `
+          <div class="rpext-result-item" data-url="${value['url']}" data-key="${key}">
+            <img class="rpext-result-item-favicon" alt="${key}" src="${resultIcon}" />
+            <div class="rpext-result-item-title">${styledKey}</div>
+          </div>`;
+      }
     }
 
     // console.log(results);
     // console.log(document.querySelector('.rpext-result-list'));
 
-    document.querySelector('.rpext-result-list').innerHTML = results;
+    const resultList = document.querySelector('.rpext-result-list') as HTMLElement | null;
+    if (resultList === null) return;
+
+    resultList.innerHTML = results;
+    resultList.scrollTop = 0;
 
     // When ever results get updated
     // highlighted item is set to first item
     GLOBAL_STATE.highlighted = 0;
-    Utils.updateHighlightedItem(GLOBAL_STATE.highlighted);
+    Utils.updateHighlightedItem(GLOBAL_STATE.highlighted, 'down', false);
   }
 
   /**
@@ -206,17 +196,23 @@ class Utils {
    * @param index
    * @param dir
    */
-  static updateHighlightedItem(index, dir = 'down') {
-    document.querySelectorAll('.rpext-result-item').forEach((el, idx) => {
+  static updateHighlightedItem(index, dir = 'down', shouldScroll = true) {
+    const items = document.querySelectorAll('.rpext-result-item');
+    if (items.length === 0) {
+      GLOBAL_STATE.highlighted = 0;
+      return;
+    }
+
+    const resultList = document.querySelector('.rpext-result-list');
+
+    items.forEach((el, idx) => {
       if (index === idx) {
-        let x = el as HTMLElement;
+        const item = el as HTMLElement;
         el.classList.add('rpext-result-focused');
-        // console.log(el.offsetTop);
-        // if (el.offsetTop > 500 && dir == 'down')
-        //   document.querySelector('.rpext-result-list').scrollTop = el.offsetTop - 37;
-        // else if (dir == 'up')
-        document.querySelector('.rpext-result-list').scrollTop =
-          x.offsetTop - 37;
+
+        if (shouldScroll && resultList instanceof HTMLElement) {
+          item.scrollIntoView({ block: 'nearest' });
+        }
       } else {
         el.classList.remove('rpext-result-focused');
       }
@@ -277,20 +273,38 @@ class Utils {
       // not exist otherwise it will create
       // Multiple divs over and over
       if (!domUtil.doesSpotlightDivExist()) {
+          const iconUrl = chrome.runtime.getURL('icons/icon_48.png');
         let mainElement = `
-              <div id="rpext">
+              <div id="rpext" role="dialog" aria-modal="true" aria-label="ZapSearch">
                 <div class="rpext-inner">
-  
-                  <input 
-                      placeholder="Search bookmarks (Prepend '@' - history, '>' - Commands, '?' - Google search)"
-                      type="text" class="rpext-input" />
-                  <div class="rpext-result-list">
-        
+                  <div class="rpext-search-shell">
+                    <div class="rpext-search-meta">
+                      <img class="rpext-brand-logo" src="${iconUrl}" alt="ZapSearch logo" />
+                      <div class="rpext-search-header-copy">
+                        <div class="rpext-search-title">ZapSearch ⚡</div>
+                        <div class="rpext-search-subtitle">Bookmarks • History • Commands • Google</div>
+                      </div>
+                    </div>
+                    <div class="rpext-input-wrap">
+                      <span class="rpext-input-icon">⌘</span>
+                      <input
+                        placeholder="Search bookmarks, history (@), actions (>), Google (?)..."
+                        type="text"
+                        class="rpext-input"
+                        aria-label="Search bookmarks, history, commands, or Google"
+                      />
+                    </div>
+                    <div class="rpext-hints">
+                      <span class="rpext-hint-pill">Bookmarks</span>
+                      <span class="rpext-hint-pill">@ History</span>
+                      <span class="rpext-hint-pill">&gt; Commands</span>
+                      <span class="rpext-hint-pill">? Google</span>
+                    </div>
                   </div>
+                  <div class="rpext-result-list" role="listbox"></div>
                 </div>
               </div>
-            
-              `;
+            `;
 
         var wrapperDiv = document.createElement('div');
         wrapperDiv.classList.add('rpext-outter-wrap');
@@ -343,15 +357,15 @@ class Utils {
                 url: 'action:move-start',
                 favicon: imgURL,
               },
-              '"Duplicate" this tab': {
+              'Duplicate this tab': {
                 url: 'action:duplicate',
                 favicon: imgURL,
               },
-              '"Close Duplicated" tabs in the "Current Window"': {
+              'Close Duplicated tabs in the "Current Window"': {
                 url: 'action:deDuplicate',
                 favicon: imgURL,
               },
-              '"Close Duplicated" tabs across "All the Windows"': {
+              'Close Duplicated tabs across "All the Windows"': {
                 url: 'action:deDuplicateAll',
                 favicon: imgURL,
               },
@@ -421,12 +435,17 @@ class Utils {
           }
         });
 
-        let resultList = document.querySelector('.rpext-result-list');
-        resultList.addEventListener('click', (event: any) => {
-          let url = event.target.getAttribute('data-url');
-          let ranksKey = event.target.getAttribute('data-key');
-          thisObj.openUrl(url, ranksKey);
-          domUtil.removeSpotlightDiv();
+        let resultList = document.querySelector('.rpext-result-list')!;
+        resultList.addEventListener('click', (event: MouseEvent) => {
+          const item = (event.target as HTMLElement).closest('.rpext-result-item');
+          if (item instanceof HTMLElement) {
+            const url = item.dataset.url;
+            const ranksKey = item.dataset.key;
+            if (url && ranksKey) {
+              thisObj.openUrl(url, ranksKey);
+              domUtil.removeSpotlightDiv();
+            }
+          }
         });
 
         // Optionally send response to the

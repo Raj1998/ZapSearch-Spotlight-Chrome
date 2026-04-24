@@ -6,6 +6,13 @@ var bookmarks_map = {};
 var ranks = {}
 var isFirstCall = true
 
+function getFaviconUrl(pageUrl) {
+  const faviconUrl = new URL(chrome.runtime.getURL('/_favicon/'));
+  faviconUrl.searchParams.set('pageUrl', pageUrl);
+  faviconUrl.searchParams.set('size', '32');
+  return faviconUrl.toString();
+}
+
 /**
  * Class for managing background actions 
  * Unlike Content script, 
@@ -21,33 +28,24 @@ var isFirstCall = true
    */
   static process_bookmark = async (bookmarks) => {
     if (isFirstCall === true) {
-      bookmarks_map = {}
+      bookmarks_map = {};
       isFirstCall = false;
     }
-        
-    for (var i = 0; i < bookmarks.length; i++) {
-      var bookmark = bookmarks[i];
 
+    for (const bookmark of bookmarks) {
       if (bookmark.url) {
-        // let favicon = await BackgroundManager.fetchFavicon(bookmark.url);
         bookmarks_map[bookmark.title] = {
-          favicon: '',
+          favicon: getFaviconUrl(bookmark.url),
           url: bookmark.url,
         };
-        // chrome.storage.local.get([bookmark.title], function (result) {
-          
-        //   let res = result[bookmark.title] || 0;
-        //   ranks[bookmark.title] = res;
-          
-        // });
-        ranks[bookmark.title] = ranks[bookmark.title] || 0
+        ranks[bookmark.title] = ranks[bookmark.title] || 0;
       }
 
       if (bookmark.children) {
-        bookmark.children.forEach ( bm => {
-          bm.title = `${bookmark.title}/${bm.title}`
-        })
-        BackgroundManager.process_bookmark(bookmark.children);
+        bookmark.children.forEach((bm) => {
+          bm.title = `${bookmark.title}/${bm.title}`;
+        });
+        await BackgroundManager.process_bookmark(bookmark.children);
       }
     }
   };
@@ -83,9 +81,10 @@ var isFirstCall = true
   /**
    * Fetching bookmarks by getTree API
    */
-   static fetchBookmarks = () => {
+   static fetchBookmarks = async () => {
     isFirstCall = true;
-    chrome.bookmarks.getTree(BackgroundManager.process_bookmark);
+    const bookmarks = await chrome.bookmarks.getTree();
+    await BackgroundManager.process_bookmark(bookmarks);
   }
 
 
@@ -150,18 +149,27 @@ var isFirstCall = true
       sendResponse
     ) {
       if (request.action == 'duplicate') {
-        chrome.tabs.getSelected(null, (tab) => {
-          chrome.tabs.duplicate(tab.id);
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          const tab = tabs[0];
+          if (tab?.id !== undefined) {
+            chrome.tabs.duplicate(tab.id);
+          }
         });
         sendResponse('OK');
       } else if (request.action == 'move-end') {
-        chrome.tabs.getSelected(null, (tab) => {
-          chrome.tabs.move(tab.id, { index: -1 });
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          const tab = tabs[0];
+          if (tab?.id !== undefined) {
+            chrome.tabs.move(tab.id, { index: -1 });
+          }
         });
         sendResponse('OK');
       } else if (request.action == 'move-start') {
-        chrome.tabs.getSelected(null, (tab) => {
-          chrome.tabs.move(tab.id, { index: 0 });
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          const tab = tabs[0];
+          if (tab?.id !== undefined) {
+            chrome.tabs.move(tab.id, { index: 0 });
+          }
         });
         sendResponse('OK');
       } else if (request.action == 'prependedJs') {
@@ -199,12 +207,14 @@ var isFirstCall = true
         })
         return true;
       } else if (request.action == 'queryBookmarks') {
-        BackgroundManager.fetchBookmarks()
-
-        sendResponse({bm: {...bookmarks_map}})
+        BackgroundManager.fetchBookmarks().then(() => {
+          sendResponse({ bm: { ...bookmarks_map } });
+        });
         return true;
       } else if (request.action == 'queryGoogle') {
-        window.open(`https://www.google.com/search?q=${request.q}`)
+        chrome.tabs.create({
+          url: `https://www.google.com/search?q=${encodeURIComponent(request.q)}` ,
+        });
         sendResponse('OK')
       } else if (request.action == 'deDuplicate') {
         var mySet = new Set();
@@ -256,7 +266,9 @@ var isFirstCall = true
 // });
 
 const bgManager = new BackgroundManager();
-BackgroundManager.fetchBookmarks();
+BackgroundManager.fetchBookmarks().catch((error) => {
+  console.error('Failed to fetch bookmarks', error);
+});
 BackgroundManager.setLaunchListener();
 BackgroundManager.setUtilityListeners();
 

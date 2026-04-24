@@ -1,23 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="content.css">
-    <title>ZapSearch - Settings Page</title>
-</head>
-<body>
-    <h1>ZapSearch - Settings</h1>
-    <p>More settings Comming soon...</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="content.css" />
+    <title>ZapSearch Settings</title>
+  </head>
+  <body class="rpext-shared-scope">
+    <div class="rpext-page">
+      <div class="rpext-page-shell">
+        <div class="rpext-card rpext-panel">
+          <div class="rpext-header">
+            <img src="icons/icon_128.png" width="56" height="56" alt="ZapSearch icon" />
+            <div class="rpext-header-copy">
+              <h1 class="rpext-title">ZapSearch Settings</h1>
+              <p class="rpext-subtitle">Manage the launch shortcut and reset learned bookmark ranking.</p>
+            </div>
+          </div>
 
-    <hr>
-    <h3>Current Shortcut to launch: <span id="curr-shortcut"> <span id="if-not-found">Not Found. Click 'Change Shortcut' Button ASAP</span> </span></h3>
-     <hr>
+          <section class="rpext-section">
+            <div class="rpext-shortcut-row">
+              <div>
+                <div class="rpext-label">Launch Shortcut</div>
+                <p class="rpext-note">If the shortcut looks missing, open Chrome shortcuts and set it there.</p>
+              </div>
+              <div id="curr-shortcut" class="rpext-shortcut-value rpext-text-error">
+                <span id="if-not-found">Not set. Change now.</span>
+              </div>
+            </div>
+          </section>
 
-    <button id="ext-shortcut">Change shortcut</button>
-    <button id="clear-storage-btn">Reset Ranking</button>
-    
+          <section class="rpext-section">
+            <div class="rpext-button-row">
+              <button id="ext-shortcut" class="rpext-btn">Change Shortcut</button>
+              <button id="clear-storage-btn" class="rpext-btn rpext-btn--secondary">Reset Ranking</button>
+            </div>
+          </section>
+
+          <section class="rpext-section">
+            <h2 class="rpext-section-title">More Settings</h2>
+            <p class="rpext-note">More customization options can be added here later without changing the core search experience.</p>
+          </section>
+        </div>
+      </div>
+    </div>
     <script src="lib/options.js"></script>
-    <script  src="lib/content.js"></script>
-</body>
+  </body>
 </html>

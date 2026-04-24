@@ -1,76 +1,65 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      body {
-        width: 380px;
-      }
-      .__rpext-body {
-        font-family: 'Helvetica', 'Arial', sans-serif;
-      }
-      #if-not-found {
-        color: rgb(255, 94, 94);
-      }
-      #curr-shortcut {
-        color: rgb(255, 94, 94);
-        font-size: 28px;
-      }
-      .__rpext-header {
-        display: flex;
-      }
-      .__rpext-header img,
-      .__rpext-content {
-        margin: 0.83em;
-      }
-      .__rpext-action-icon {
-        color: rgb(225, 70, 65);
-        font-weight: 500;
-      }
-      .__rpext-action {
-        font-size: medium;
-      }
-    </style>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="content.css" />
+    <title>ZapSearch</title>
   </head>
-  <body class="__rpext-body">
-    <div class="__rpext-header">
-      <img src="icons/icon_128.png" height="48px" />
-      <h2>ZapSearch - Spotlight Search for Chrome</h2>
-    </div>
-    <hr />
+  <body class="rpext-shared-scope">
+    <div class="rpext-page-shell">
+      <div class="rpext-card rpext-panel" style="width: 380px;">
+        <div class="rpext-header">
+          <img src="icons/icon_128.png" width="48" height="48" alt="ZapSearch icon" />
+          <div class="rpext-header-copy">
+            <h1 class="rpext-title">ZapSearch</h1>
+            <p class="rpext-subtitle">A faster spotlight for bookmarks, history, commands, and search.</p>
+          </div>
+        </div>
 
-    <div class="__rpext-content">
-      <h2>
-        Current Shortcut to launch:
-        <span id="curr-shortcut">
-          <span id="if-not-found"
-            >Not Found. Click 'Change Shortcut' Button ASAP</span
-          >
-        </span>
-      </h2>
-      <h4><i>Note: After installation reload old tabs to make ZapSearch working</i></h4>
-      <hr />
-      <h3>Default Shortcut to launch</h3>
-      <p>"Ctrl+Shift+L" or "Command+Shift+L"</p>
+        <section class="rpext-section">
+          <div class="rpext-shortcut-row">
+            <div>
+              <div class="rpext-label">Launch Shortcut</div>
+              <p class="rpext-note">Reload older tabs after installing or updating the extension.</p>
+            </div>
+            <div id="curr-shortcut" class="rpext-shortcut-value rpext-text-error">
+              <span id="if-not-found">Not set. Change now.</span>
+            </div>
+          </div>
+        </section>
 
-      <button id="ext-shortcut">Change shortcut</button>
-      <button id="clear-storage-btn">Reset Ranking</button>
+        <section class="rpext-section">
+          <h2 class="rpext-section-title">Defaults</h2>
+          <div class="rpext-kbd-row">
+            <div><span class="rpext-kbd">Ctrl + Shift + L</span></div>
+            <div><span class="rpext-kbd">Command + Shift + L</span></div>
+          </div>
+        </section>
 
-      <hr />
-      <div class="__rpext-action">
-      <h3>Usage - Prepend following characters</h3>
-      <p><span class="__rpext-action-icon">></span> To run Commands</p>
-      <p><span class="__rpext-action-icon">@</span> To Search in History</p>
-      <p><span class="__rpext-action-icon">?</span> To Google Search</p>
-    </div>
-      <hr />
-      <p>
-        Example: '@ Stack overflow' - to search <strong> History </strong> with
-        'Stack overflow'
-      </p>
-      <p>
-        Example: 'Stack overflow' - to search <strong> Bookmarks </strong> with
-        'Stack overflow'
-      </p>
+        <section class="rpext-section">
+          <div class="rpext-button-row">
+            <button id="ext-shortcut" class="rpext-btn">Change Shortcut</button>
+            <button id="clear-storage-btn" class="rpext-btn rpext-btn--secondary">Reset Ranking</button>
+          </div>
+        </section>
+
+        <section class="rpext-section">
+          <h2 class="rpext-section-title">Quick Actions</h2>
+          <div class="rpext-action-list">
+            <div class="rpext-action-item"><span class="rpext-action-icon">&gt;</span><span>Run browser commands</span></div>
+            <div class="rpext-action-item"><span class="rpext-action-icon">@</span><span>Search your history</span></div>
+            <div class="rpext-action-item"><span class="rpext-action-icon">?</span><span>Send the query to Google</span></div>
+          </div>
+        </section>
+
+        <section class="rpext-section">
+          <h2 class="rpext-section-title">Examples</h2>
+          <div class="rpext-example-list">
+            <div class="rpext-example-item"><strong>@ Stack Overflow</strong><span>Searches History</span></div>
+            <div class="rpext-example-item"><strong>Stack Overflow</strong><span>Searches Bookmarks</span></div>
+          </div>
+        </section>
+      </div>
     </div>
     <script src="lib/options.js"></script>
   </body>
